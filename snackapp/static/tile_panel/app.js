@@ -117,7 +117,7 @@ function tileData(index) {
     description: Math.floor(Math.random() * 1001) + " in stock",
     imgSrc: "../../static/images/pic" + (imgNum > 9 ? "" : "0") + imgNum + ".jpg",
     imgAlt: "image #" + imgNum,
-    link: "generic.html",             // useful with real data???
+    link: "item_chart.html",          // useful with real data???
     articleClass: "style" + styleNum, // color on mouseout
     spanClass: "image",               // probably don't need this
     divClass: "content"               // probably don't need this
