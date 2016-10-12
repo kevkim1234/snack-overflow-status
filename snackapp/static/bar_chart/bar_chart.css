@@ -1,32 +1,40 @@
-#bar_chart { /* SVG */
+.doodlydoo {
+  margin: 0px; /* set margin/border/padding to 0 so that */
+  border: 0px; /* the size of the entire widget is just */
+  padding: 0px; /* the size of the SVG */
+  font-family: sans-serif;
+}
+
+.doodlydoo #bar_chart { /* SVG */
   shape-rendering: crispEdges;
 }
 
-#bar_chart .axis path { /* axis line */
+.doodlydoo #bar_chart .axis path { /* axis line */
   stroke: none;
   stroke-width: 0;
 }
 
-#bar_chart .axis line { /* tickmarks */
+.doodlydoo #bar_chart .axis line { /* tickmarks */
   stroke: black;
-  stroke-width: 1;
+  stroke-width: 0; /* 0 = no tickmarks */
   shape-rendering: crispEdges;
 }
 
-#bar_chart .axis text { /* labels */
+.doodlydoo #bar_chart .axis text { /* labels */
   font-family: sans-serif;
   font-size: 11px;
   font-weight: bold;
 }
 
-#bar_chart #chart rect:hover { /* bars */
-  fill-opacity: 0.5;
+.doodlydoo #bar_chart #chart rect:hover { /* bars */
+  filter: url("#shadow");
+  /*fill-opacity: 0.75;
   stroke-width: 2px;
   stroke-opacity: 1;
-  stroke: gray;
+  stroke: gray;*/
 }
 
-#bar_chart #chart text { /* value labels */
+.doodlydoo #bar_chart #chart text { /* value labels */
   font-weight: bold;
   font-family: sans-serif;
   font-size: 11px;

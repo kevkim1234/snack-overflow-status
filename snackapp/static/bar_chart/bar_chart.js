@@ -12,10 +12,9 @@
 
 function bar_chart(id, h, data) {
 
-      // container is the DOM element in which the chart will be appended (the
-      // parent), and containerSize holds info on its dimenions and position
-  var container = document.getElementById(id),
-      containerSize = container.getBoundingClientRect(),
+      // parent is the DOM element in which the chart will be appended
+  var parent = document.getElementById(id),
+      containerSize = parent.getBoundingClientRect(),
 
       // determine the SVG margins and width/height of the chart based on the
       // parent element's dimensions
@@ -24,7 +23,7 @@ function bar_chart(id, h, data) {
       height = h - margin.top - margin.bottom,
 
       // small details
-      textOffset = 6, axisOffset = 5,
+      textOffset = 6, axisOffset = 0,
 
       // categorical colors for bars
       google = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099",
@@ -82,11 +81,30 @@ function bar_chart(id, h, data) {
   //
   //============================================================================
 
+  // container div
+  var container = d3.select("#" + id)
+                    .append("div")
+                    .classed("doodlydoo", true);
+
   // the actual SVG
-  var SVG = d3.select("#" + id)
-              .append("svg")
+  var SVG = container.append("svg")
               .attr("width", width + margin.left + margin.right)
               .attr("height", height + margin.top + margin.bottom);
+
+  // filter for drop shadows (TODO: clean this up, if possible)
+  var filter = SVG.append("filter")
+                  .attr("id", "shadow")
+                  .attr("x", -2)
+                  .attr("y", -2)
+                  .attr("width", 200)
+                  .attr("height", 200);
+  filter.append("feGaussianBlur")
+        .attr("in", "SourceAlpha")
+        .attr("stdDeviation", 3);
+  filter.append("feOffset").attr("dx", 2).attr("dy", 2);
+  var filterMerge = filter.append("feMerge");
+  filterMerge.append("feMergeNode");
+  filterMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
   // the pseudo-SVG, with margins applied
   var svg = SVG.append("g").attr("id", "bar_chart");
@@ -187,7 +205,7 @@ function bar_chart(id, h, data) {
   // according to container's size, then visually updates the widths of the bars
   // and x-coordinates of the text values
   function updateChartSize() {
-    containerSize = container.getBoundingClientRect();
+    containerSize = parent.getBoundingClientRect();
     width = containerSize.width - margin.left - margin.right;
     SVG.attr("width", width + margin.left + margin.right);
     marginChart = width - marginLabel - marginValue;
