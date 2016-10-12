@@ -108,16 +108,17 @@ var App = React.createClass({
 //
 //==============================================================================
 
-// given a nonnegative number, returns random example data for generating a Tile
-function tileData(index) {
+// given an object with a 'key' and 'stock' field and a nonnegative number,
+// returns an object containing all the data needed for generating a Tile
+function tileData(datum, index) {
   var imgNum = Math.floor(index % 12 + 1),
       styleNum = Math.floor(index % 6 + 1);
   return {
-    name: "Product " + index,
-    description: Math.floor(Math.random() * 1001) + " in stock",
+    name: datum.key,
+    description: datum.stock + " in stock",
     imgSrc: "../../static/images/pic" + (imgNum > 9 ? "" : "0") + imgNum + ".jpg",
     imgAlt: "image #" + imgNum,
-    link: "generic.html",             // useful with real data???
+    link: "item_chart.html#chart",    // useful with real data???
     articleClass: "style" + styleNum, // color on mouseout
     spanClass: "image",               // probably don't need this
     divClass: "content"               // probably don't need this
@@ -132,8 +133,8 @@ var appInfo = {
       + "immersive snack-tracking experience you will ever have."
 };
 
-// generate some example data
-var products = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].map(tileData);
+// construct the products from the data array in data.js
+var products = data.map(tileData);
 
 //==============================================================================
 //
