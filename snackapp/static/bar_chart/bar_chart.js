@@ -100,8 +100,8 @@ function bar_chart(id, h, data) {
                   .attr("height", 200);
   filter.append("feGaussianBlur")
         .attr("in", "SourceAlpha")
-        .attr("stdDeviation", 3);
-  filter.append("feOffset").attr("dx", 2).attr("dy", 2);
+        .attr("stdDeviation", 4);
+  filter.append("feOffset").attr("dx", 0).attr("dy", 0);
   var filterMerge = filter.append("feMerge");
   filterMerge.append("feMergeNode");
   filterMerge.append("feMergeNode").attr("in", "SourceGraphic");
