@@ -82,6 +82,24 @@ var HeaderIntro = React.createClass({
   }
 });
 
+var SearchBox = React.createClass({
+
+  doSearch: function() {
+    var query = ReactDOM.findDOMNode(this.refs.searchInput).value; // this is the search text
+    this.props.doSearch(query);
+  },
+
+  render: function() {
+    return React.createElement("form", { method: "post", action: "#" },
+      React.createElement("div", { className: "row uniform" },
+        React.createElement("div", { className: "6u 12u$(xsmall)" },
+          React.createElement("input", { type: "text", ref: "searchInput", placeholder: "Search by name or keywords", value: this.props.query, onChange: this.doSearch })
+        )
+      )
+    );
+  }
+});
+
 /*
 App generates this HTML:
 
@@ -94,10 +112,40 @@ var App = React.createClass({
 
   displayName: "App",
 
+  doSearch: function(queryText) {
+    // get query result
+    var queryResult = [];
+    this.props.data.forEach(function(product) {
+      // can search by any product properties
+      if (product.name.toLowerCase().indexOf(queryText) != -1 ||
+          product.description.toLowerCase().indexOf(queryText) != -1 ||
+          product.taste.toLowerCase().indexOf(queryText) != -1 ||
+          product.price.toLowerCase().indexOf(queryText) != -1) {
+        queryResult.push(product);
+      }
+    });
+
+    this.setState({
+      query: queryText,
+      filteredData: queryResult
+    })
+  },
+
+  getInitialState: function() {
+    return {
+      query: '',
+      filteredData: this.props.data
+    }
+  },
+
   render: function() {
     return React.createElement("div", { className: "inner" },
       React.createElement(HeaderIntro, this.props.appInfo),
-      React.createElement(TilePanel, { tiles: this.props.products })
+      React.createElement("section", {},
+        React.createElement("h2", {}, "Search the Snack Overflow inventory"),
+        React.createElement(SearchBox, { query: this.state.query, doSearch: this.doSearch })
+      ),
+      React.createElement(TilePanel, { tiles: this.state.filteredData })
     );
   }
 });
@@ -121,8 +169,29 @@ function tileData(datum, index) {
     link: "item_chart.html#chart",    // useful with real data???
     articleClass: "style" + styleNum, // color on mouseout
     spanClass: "image",               // probably don't need this
-    divClass: "content"               // probably don't need this
+    divClass: "content",              // probably don't need this
+    taste: tasteTest(styleNum),
+    price: priceTest(imgNum)
   };
+}
+
+// for fun
+function tasteTest(number) {
+  if (number == 1) return "sweet";
+  if (number == 2) return "salty";
+  if (number == 3) return "gooey";
+  if (number == 4) return "chunky";
+  if (number == 5) return "refreshing";
+  if (number == 6) return "bacon-filled";
+}
+
+function priceTest(number) {
+  if (number % 6 == 0) return "cheap";
+  if (number % 6 == 1) return "cheap af";
+  if (number % 6 == 2) return "affordable";
+  if (number % 6 == 3) return "affordable af";
+  if (number % 6 == 4) return "pricey";
+  if (number % 6 == 5) return "pricey af";
 }
 
 // the app's name and description
@@ -143,6 +212,6 @@ var products = data.map(tileData);
 //==============================================================================
 
 ReactDOM.render(
-  React.createElement(App, { appInfo: appInfo, products: products }),
+  React.createElement(App, { appInfo: appInfo, data: products }),
   document.getElementById("main") // renders the app inside #main
 );
