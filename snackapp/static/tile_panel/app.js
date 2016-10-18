@@ -97,7 +97,64 @@ var App = React.createClass({
   render: function() {
     return React.createElement("div", { className: "inner" },
       React.createElement(HeaderIntro, this.props.appInfo),
-      React.createElement(TilePanel, { tiles: this.props.products })
+      //React.createElement(TilePanel, { tiles: this.props.products })
+      React.createElement(InstantBox, { data: this.props.products })
+    ); //React.createElement(InstantBox, { data: projects })
+  }
+});
+
+//==============================================================================
+//
+//                                  App Data
+//
+//==============================================================================
+
+var SearchBox = React.createClass({
+
+  doSearch: function() {
+    var query = ReactDOM.findDOMNode(this.refs.searchInput).value; // this is the search text
+    this.props.doSearch(query);
+  },
+
+  render: function() {
+    return React.createElement("input", { type: "text", ref: "searchInput", placeholder: "Search Name", value: this.props.query, onChange: this.doSearch });
+  }
+});
+
+var InstantBox = React.createClass({
+
+  doSearch: function(queryText) {
+    console.log(queryText)
+
+    // get query result
+    var queryResult = [];
+    this.props.data.forEach(function(product) {
+      // can also look at other product properties...
+      if (product.name.toLowerCase().indexOf(queryText) != -1) {
+        queryResult.push(product);
+      }
+    });
+
+    this.setState({
+      query: queryText,
+      filteredData: queryResult
+    })
+  },
+
+  getInitialState: function() {
+    return {
+      query: '',
+      filteredData: this.props.data
+    }
+  },
+
+  render: function() {
+    return (
+      React.createElement("div", { className: "InstantBox" },
+        React.createElement("h2", {}, "Search"),
+        React.createElement(SearchBox, { query: this.state.query, doSearch: this.doSearch }),
+        React.createElement(TilePanel, { tiles: this.state.filteredData })
+      )
     );
   }
 });
