@@ -82,6 +82,24 @@ var HeaderIntro = React.createClass({
   }
 });
 
+var SearchBox = React.createClass({
+
+  doSearch: function() {
+    var query = ReactDOM.findDOMNode(this.refs.searchInput).value; // this is the search text
+    this.props.doSearch(query);
+  },
+
+  render: function() {
+    return React.createElement("form", { method: "post", action: "#" },
+      React.createElement("div", { className: "row uniform" },
+        React.createElement("div", { className: "6u 12u$(xsmall)" },
+          React.createElement("input", { type: "text", ref: "searchInput", placeholder: "Search Name", value: this.props.query, onChange: this.doSearch })
+        )
+      )
+    );
+  }
+});
+
 /*
 App generates this HTML:
 
@@ -93,35 +111,6 @@ App generates this HTML:
 var App = React.createClass({
 
   displayName: "App",
-
-  render: function() {
-    return React.createElement("div", { className: "inner" },
-      React.createElement(HeaderIntro, this.props.appInfo),
-      //React.createElement(TilePanel, { tiles: this.props.products })
-      React.createElement(InstantBox, { data: this.props.products })
-    ); //React.createElement(InstantBox, { data: projects })
-  }
-});
-
-//==============================================================================
-//
-//                                  App Data
-//
-//==============================================================================
-
-var SearchBox = React.createClass({
-
-  doSearch: function() {
-    var query = ReactDOM.findDOMNode(this.refs.searchInput).value; // this is the search text
-    this.props.doSearch(query);
-  },
-
-  render: function() {
-    return React.createElement("input", { type: "text", ref: "searchInput", placeholder: "Search Name", value: this.props.query, onChange: this.doSearch });
-  }
-});
-
-var InstantBox = React.createClass({
 
   doSearch: function(queryText) {
     console.log(queryText)
@@ -149,12 +138,13 @@ var InstantBox = React.createClass({
   },
 
   render: function() {
-    return (
-      React.createElement("div", { className: "InstantBox" },
-        React.createElement("h2", {}, "Search"),
-        React.createElement(SearchBox, { query: this.state.query, doSearch: this.doSearch }),
-        React.createElement(TilePanel, { tiles: this.state.filteredData })
-      )
+    return React.createElement("div", { className: "inner" },
+      React.createElement(HeaderIntro, this.props.appInfo),
+      React.createElement("section", {},
+        React.createElement("h2", {}, "Search the Snack Overflow inventory"),
+        React.createElement(SearchBox, { query: this.state.query, doSearch: this.doSearch })
+      ),
+      React.createElement(TilePanel, { tiles: this.state.filteredData })
     );
   }
 });
@@ -200,6 +190,6 @@ var products = data.map(tileData);
 //==============================================================================
 
 ReactDOM.render(
-  React.createElement(App, { appInfo: appInfo, products: products }),
+  React.createElement(App, { appInfo: appInfo, data: products }),
   document.getElementById("main") // renders the app inside #main
 );
